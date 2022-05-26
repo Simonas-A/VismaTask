@@ -1,0 +1,15 @@
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\bin\Debug\net6.0\VismaTask.exe
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\bin\Debug\net6.0\VismaTask.deps.json
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\bin\Debug\net6.0\VismaTask.runtimeconfig.json
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\bin\Debug\net6.0\VismaTask.dll
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\bin\Debug\net6.0\VismaTask.pdb
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.csproj.AssemblyReference.cache
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.AssemblyInfoInputs.cache
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.AssemblyInfo.cs
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.csproj.CoreCompileInputs.cache
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.dll
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\refint\VismaTask.dll
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.pdb
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\VismaTask.genruntimeconfig.cache
+C:\Users\Simuxxl\source\repos\VismaTask\VismaTask\obj\Debug\net6.0\ref\VismaTask.dll
