@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VismaTask.Models
 {
-    internal class Person
+    internal class Person : IEquatable<Person>
     {
         public Person(string firstName, string lastName)
         {
@@ -16,5 +16,18 @@ namespace VismaTask.Models
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public bool Equals(Person? other)
+        {
+            if (other == null)
+                return false;
+
+            return FirstName == other.FirstName && LastName == other.LastName;
+        }
+
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }
