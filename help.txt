@@ -1,0 +1,27 @@
+﻿Create a meeting:
+	create name-of-the-meeting first-name last-name description category type start-date start-Time end-date end-time
+	or
+	create name-of-the-meeting "description of the meeting" category type start-date start-Time end-date end-time
+
+date format: 2022-05-28
+time format: 14:59
+first-name - first name of the responsible person
+last-name - last name of the responsible person
+meeting category - one from {"CodeMonkey", "Hub", "Short", "TeamBuilding"}
+meeting type - one from {"Live", "InPerson"}
+
+
+Delete a meeting:
+	delete name-of-the-meeting
+
+Add a person to the meeting
+	add name-of-the-meeting person's-first-name person's-last-name
+
+Remove a person from the meeting
+	remove name-of-the-meeting person's-first-name person's-last-name
+
+List meetings
+	list
+
+Exit
+	exit

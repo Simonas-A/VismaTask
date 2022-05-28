@@ -38,7 +38,7 @@ namespace VismaTask.Models
 
         public override string ToString()
         {
-            return $"{Name} by {ResponsiblePerson} {Description} {Category} {Type} {StartDate} {EndDate}";
+            return $"{Name} {ResponsiblePerson} {Description} {Category} {Type} {StartDate} {EndDate}";
         }
     }
 }
