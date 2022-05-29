@@ -20,8 +20,9 @@ Add a person to the meeting
 Remove a person from the meeting
 	remove name-of-the-meeting person's-first-name person's-last-name
 
-List meetings
-	list
+List meetings (filter operators can be combined and are optional)
+	list [-d description -pf first-name -pl last-name -c category -t type -s start-date -e end-date -n number-of-attendees]
+
 
 Exit
 	exit

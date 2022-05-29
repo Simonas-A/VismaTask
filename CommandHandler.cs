@@ -43,14 +43,21 @@ namespace VismaTask
                     {
                         return -16;
                     }
+
                     DateTime dt;
                     if ((
-                        (values[index] == "-s" || values[index] == "-e" ) &&
+                        (values[index] == "-s" || values[index] == "-e") &&
                         !DateTime.TryParse(values[index + 1], out dt)))
                     {
                         return -7;
                     }
-                    
+
+                    int t;
+                    if (values[index] == "-n" && !int.TryParse(values[index + 1], out t))
+                    {
+                        return -18;
+                    }
+
                     filters[i] = values[index + 1];
                 }
                 else
@@ -78,29 +85,22 @@ namespace VismaTask
             {
 
                 case "create":
-                    
                     Meeting? meeting = HandleCreate(args, out status);
-
                     if (meeting != null)
                         meetings.Add(meeting);
-
                     break;
 
                 case "delete":
-
                     status = HandleDelete(args, user);
                     break;
 
                 case "add":
-
                     status = HandleAdd(args);
                     break;
 
                 case "remove":
-
                     status = HandleRemove(args);
                     break;
-
                 case "list":
                     status = HandleList(args);
                     break;
@@ -108,6 +108,7 @@ namespace VismaTask
                 case "help":
                     status = -15;
                     break;
+
                 default:
                     status = -13;
                     break;
@@ -116,65 +117,9 @@ namespace VismaTask
             if (status > 0)
             {
                 IOController.WriteMeetings(path, meetings);
-                
             }
 
             return GetStatusMessage(status);
-        }
-
-        private string GetStatusMessage(int status)
-        {
-            switch (status)
-            {
-                case 0:
-                    return "opa";
-                case 1:
-                    return "Meeting creation successful";
-                case 2:
-                    return "Meeting deletion successful";
-                case 3:
-                    return "Person added successfully";
-                case 4:
-                    return "Person removed successfully";
-                case 5:
-                    return FormatList();
-                case -1:
-                    return "Empty command";
-                case -2:
-                    return "Invalid meeting creation arguments";
-                case -3:
-                    return "Too few arguments";
-                case -4:
-                    return "Meeting not found";
-                case -5:
-                    return "You don't have permissions to delete this meeting";
-                case -6:
-                    return "Meeting deletion failed";
-                case -7:
-                    return "Invalid time format";
-                case -8:
-                    return "Person is busy at that time";
-                case -9:
-                    return "Meeting already contains this person";
-                case -10:
-                    return "Cannot remove responsible person from the meeting";
-                case -11:
-                    return "Invalid meeting category argument";
-                case -12:
-                    return "Invalid meeting type argument";
-                case -13:
-                    return "Invalid command";
-                case -14:
-                    return "Person was not found";
-                case -15:
-                    return Help();
-                case -16:
-                    return "Invalid filter arguments";
-                case -17:
-                    return "Ending time cannot be before starting time";
-                default:
-                    return "";
-            }
         }
 
         private string Help()
@@ -186,13 +131,14 @@ namespace VismaTask
         {
             StringBuilder sb = new StringBuilder();
 
+            //filters by all filter values. If the filter was not set, filtering for that value is skipped 
             foreach (Meeting meeting in meetings
                                                 .Where(m => m.Description.Contains(filters[0]) &&
                                                 (filters[1] == "" || m.ResponsiblePerson.FirstName.Equals(filters[1])) &&
                                                 (filters[2] == "" || m.ResponsiblePerson.LastName.Equals(filters[2])) &&
                                                 (filters[3] == "" || m.Category.ToString().Equals(filters[3])) &&
                                                 (filters[4] == "" || m.Type.ToString().Equals(filters[4])) &&
-                                                (filters[5] == "" || (m.StartDate - DateTime.Parse(filters[5])).TotalDays > 0 ) &&
+                                                (filters[5] == "" || (m.StartDate - DateTime.Parse(filters[5])).TotalDays > 0) &&
                                                 (filters[6] == "" || (DateTime.Parse(filters[6]) - m.EndDate).TotalDays > 0) &&
                                                 (filters[7] == "" || (m.People.Count >= Convert.ToInt32(filters[7]))
                                                 )))
@@ -244,7 +190,7 @@ namespace VismaTask
             Person person = new Person(firstName, lastName);
 
             //Check if person is already attending another meeting at that time
-            if (meetings.Any(m => 
+            if (meetings.Any(m =>
                         m.People.Contains(person) &&
                         m.Name != meetingName &&
                         m.StartDate <= time &&
@@ -259,7 +205,7 @@ namespace VismaTask
 
             if (meeting.People.Contains(person))
                 return -9;
-            
+
             meeting.People.Add(person);
             return 3;
         }
@@ -280,7 +226,7 @@ namespace VismaTask
         {
             string[] values = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if (values.Length < 9)
+            if (values.Length < 10)
             {
                 status = -3;
                 return null;
@@ -303,49 +249,41 @@ namespace VismaTask
             }
 
 
-            MeetingCategory category;
+            MeetingCategory? category = null;
 
-            switch ( values[4 + addition])
+            foreach (var mCategory in Enum.GetValues(typeof(MeetingCategory)))
             {
-                case "TeamBuilding":
-                    category = MeetingCategory.TeamBuilding;
+                if (mCategory.ToString() == values[4 + addition])
+                {
+                    category = (MeetingCategory)mCategory;
                     break;
-
-                case "CodeMonkey":
-                    category = MeetingCategory.CodeMonkey;
-                    break;
-
-                case "Hub":
-                    category = MeetingCategory.Hub;
-                    break;
-
-                case "Short":
-                    category = MeetingCategory.Short;
-                    break;
-
-                default:
-                    status = -11;
-                    return null;
-
+                }
             }
 
-            MeetingType type;
-
-            switch (values[5 + addition])
+            if (category == null)
             {
-                case "Live":
-                    type = MeetingType.Live;
-                    break;
-
-                case "InPerson":
-                    type = MeetingType.InPerson;
-                    break;
-
-                default:
-                    status = -12;
-                    return null;
-
+                status = -11;
+                return null;
             }
+
+
+            MeetingType? type = null;
+
+            foreach (var mType in Enum.GetValues(typeof(MeetingType)))
+            {
+                if (mType.ToString() == values[5 + addition])
+                {
+                    type = (MeetingType)mType;
+                    break;
+                }
+            }
+
+            if (type == null)
+            {
+                status = -12;
+                return null;
+            }
+
 
             DateTime startDate;
             if (!DateTime.TryParse($"{values[6 + addition]} {values[7 + addition]}", out startDate))
@@ -368,7 +306,62 @@ namespace VismaTask
             }
 
             status = 1;
-            return new Meeting(name, new Person(personName, personLastName), description, category, type, startDate, endDate);
+            return new Meeting(name, new Person(personName, personLastName), description, (MeetingCategory)category, (MeetingType)type, startDate, endDate);
+        }
+
+        private string GetStatusMessage(int status)
+        {
+            switch (status)
+            {
+                case 0:
+                    return "ok";
+                case 1:
+                    return "Meeting creation successful";
+                case 2:
+                    return "Meeting deletion successful";
+                case 3:
+                    return "Person added successfully";
+                case 4:
+                    return "Person removed successfully";
+                case 5:
+                    return FormatList();
+                case -1:
+                    return "Empty command";
+                case -3:
+                    return "Too few arguments";
+                case -4:
+                    return "Meeting not found";
+                case -5:
+                    return "You don't have permissions to delete this meeting";
+                case -6:
+                    return "Meeting deletion failed";
+                case -7:
+                    return "Invalid time format";
+                case -8:
+                    return "Person is busy at that time";
+                case -9:
+                    return "Meeting already contains this person";
+                case -10:
+                    return "Cannot remove responsible person from the meeting";
+                case -11:
+                    return "Invalid meeting category argument";
+                case -12:
+                    return "Invalid meeting type argument";
+                case -13:
+                    return "Invalid command";
+                case -14:
+                    return "Person was not found";
+                case -15:
+                    return Help();
+                case -16:
+                    return "Invalid filter arguments";
+                case -17:
+                    return "Ending time cannot be before starting time";
+                case -18:
+                    return "Invalid number format";
+                default:
+                    return "";
+            }
         }
     }
 }
